@@ -7,6 +7,10 @@ import {
 } from 'react'
 import Aragon, { providers } from '@aragon/api'
 
+const paramsRequest = params => {
+  postMessage('paramsRequest', params)
+}
+
 const postMessage = (name, value) => {
   window.parent.postMessage({ from: 'app', name, value }, '*')
 }
@@ -121,6 +125,7 @@ function getAragonApiData(hookName) {
 
 const useAragonApi = () => ({
   ...getAragonApiData('useAragonApi()'),
+  paramsRequest,
   requestMenu,
   _sendMessage: postMessage,
 })
