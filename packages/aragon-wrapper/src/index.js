@@ -200,6 +200,7 @@ export default class Aragon {
     this.initAppIdentifiers()
     this.initNetwork()
     this.initNotifications()
+    this.initPath()
     this.transactions = new Subject()
     this.signatures = new Subject()
   }
@@ -989,6 +990,26 @@ export default class Aragon {
   }
 
   /**
+   * Initialise the path observable.
+   *
+   * @return {Promise<void>}
+   */
+  async initPath () {
+    this.path = new ReplaySubject(1)
+    this.path.next('/')
+  }
+
+  /**
+   * Set the path of the current app.
+   *
+   * @param {string} path
+   * @return {void}
+   */
+  setPath (path) {
+    this.path.next(path)
+  }
+
+  /**
    * Initialise the notifications observable.
    *
    * @return {void}
@@ -1173,7 +1194,8 @@ export default class Aragon {
         handlers.createRequestHandler(request$, 'accounts', handlers.accounts),
         handlers.createRequestHandler(request$, 'describe_script', handlers.describeScript),
         handlers.createRequestHandler(request$, 'web3_eth', handlers.web3Eth),
-        handlers.createRequestHandler(request$, 'sign_message', handlers.signMessage)
+        handlers.createRequestHandler(request$, 'sign_message', handlers.signMessage),
+        handlers.createRequestHandler(request$, 'path', handlers.path),
       ).subscribe(
         (response) => messenger.sendResponse(response.id, response.payload)
       )
